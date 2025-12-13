@@ -1,6 +1,9 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{beamertheme}[2025/12/12 Custom Beamer Theme]
 
+\RequirePackage{tikz}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{shapes.misc}
 \RequirePackage{microtype}
 \RequirePackage{etoolbox}
 \RequirePackage[T1]{fontenc}
@@ -32,6 +35,29 @@
 \setbeamertemplate{itemize subitem}{{\textendash}}
 \setbeamertemplate{itemize subsubitem}[triangle]
 
+% Font Settings
+\setbeamerfont{subtitle}{series=\scshape}
+\setbeamercolor{subtitle}{fg=black}
+\setbeamerfont{author}{family=\sourcesanspro}
+\setbeamercolor{author}{fg=black}
+
+\setbeamerfont{institute}{family=\sourcesanspro}
+\setbeamercolor{institute}{fg=cardinalred}
+
+\setbeamerfont{email}{family=\sourcesanspro}
+\setbeamercolor{email}{fg=coolgrey}
+
+\setbeamerfont{date}{family=\sourcesanspro}
+\setbeamercolor{date}{fg=white}
+
+\setbeamerfont{frametitle}{series=\scshape}
+\setbeamercolor{frametitle}{fg=black}
+
+% Email handling
+% Initialize @email to avoid errors if user doesn't define it
+\def\@email{} 
+\newcommand{\email}[1]{\def\@email{\texttt{\MakeLowercase{\textls[10]{#1}}}}}
+
 % Navigation Symbols (Adding page numbers)
 \addtobeamertemplate{navigation symbols}{}{%
     \usebeamerfont{footline}%
@@ -44,20 +70,22 @@
 % Title Page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newtoggle{showInstituteLogo}
+\togglefalse{showInstituteLogo} 
+
+\newcommand{\instituteLogo}{} 
+\newcommand{\instituteThumb}{} 
+
+\newcommand{\useInstituteLogo}[1]{%
+  \toggletrue{showInstituteLogo}
+  \renewcommand{\instituteLogo}{#1}%
+}
+
+\newcommand{\useInstituteThumb}[1]{%
+  \renewcommand{\instituteThumb}{#1}%
+}
+
 \setbeamertemplate{title page}[default][left] 
-
-% Font Settings
-\setbeamerfont{subtitle}{series=\scshape}
-\setbeamercolor{subtitle}{fg=black}
-\setbeamerfont{author}{family=\sourcesanspro}
-\setbeamercolor{author}{fg=black}
-\setbeamercolor{institute}{fg=cardinalred}
-\setbeamercolor{email}{fg=coolgrey}
-
-% Email handling
-% Initialize @email to avoid errors if user doesn't define it
-\def\@email{} 
-\newcommand{\email}[1]{\def\@email{\texttt{\MakeLowercase{\textls[10]{#1}}}}}
 
 % Custom Title Page Template
 \defbeamertemplate*{title page}{customized}[1][]
@@ -70,18 +98,35 @@
         
         \fill[fill=white] (CircleCenter) circle (6cm);
     \end{tikzpicture}
-
-    \center{
+    
+    \vspace{-1.2cm}
+    \centering{
+      \iftoggle{showInstituteLogo}{
+        % If toggle is TRUE, show the image
+        % \insertinstitute now holds the image path provided by the user
+        \begin{figure}
+             \includegraphics[height=2cm]{\instituteLogo} % Adjust height as needed
+        \end{figure}
+      }{
+        % If toggle is FALSE, show the text (Standard behavior)
+        \usebeamerfont{institute}{\usebeamercolor[fg]{institute}\textls[100]{\textsc{\insertinstitute}}}\par
+      }
+      \bigskip
       \usebeamerfont{title}\textls[100]{\MakeUppercase{\textbf{\inserttitle}}}\par
       \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\textls[100]{\textsc{\insertsubtitle}}\par\par
     }
     \vfill
-    \usebeamerfont{institute}{\usebeamercolor[fg]{institute}\textls[100]{\textsc{\insertinstitute}}}\par
     \usebeamerfont{author}\usebeamercolor[fg]{author}\textls[100]{\textsc{\insertauthor}}\par
-    \bigskip
+    \smallskip
     {\usebeamercolor[fg]{email}\@email}\par
-    \usebeamerfont{date}\insertdate\par
-    \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+    \vfill
+    \begin{figure}
+      \centering
+      \begin{tikzpicture}
+        \node[fill=cardinalred, rounded rectangle, minimum width=1.1cm, minimum height=0.6cm] at (0, 0) {\footnotesize{\textbf{\usebeamercolor[fg]{date}{\usebeamerfont{date}{\insertdate}}}}};
+      \end{tikzpicture}
+    \end{figure}
+    \vspace{-1cm}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,8 +144,8 @@
 
 % style of section presented in the table of contents
 \setbeamertemplate{section in toc}{%
-  \tikz{\draw[fill=blue!20] (0,0) circle (3pt);}\hspace{2mm}\inserttocsection\par
-      {\usebeamerfont{subtitle}\usebeamercolor[fg]{frametitle}{\textsc{\inserttocsection\protect~\text{.}\insertsectionhead}}}\par%
+  \tikz{\draw[fill=black] (0,0) circle (3pt);}
+  \hspace{1mm}{\usebeamerfont{subtitle}\usebeamercolor[fg]{frametitle}{\textsc{\textbf{\inserttocsection}}}}\par%
 
 }
 \setbeamertemplate{subsection in toc}{%
@@ -111,12 +156,36 @@
 % avoid numbering of frames that are breaked into multiply slides
 \setbeamertemplate{frametitle continuation}{}
 
+\newcommand{\InsertTocFrame}{
+        \begin{frame}
+              \begin{tikzpicture}[remember picture, overlay]
+                \coordinate (CircleCenter) at ([xshift=-8cm, yshift=0cm]current page.center);
+                
+                % Outer Grey Circle
+                \fill[fill=coolgrey!10] (CircleCenter) circle (8cm);
+                
+                % Inner White Circle
+                \fill[fill=white] (CircleCenter) circle (6cm);
+            \end{tikzpicture}
+
+            \begin{minipage}[t]{0.6\textwidth}
+              \vfill
+              \begin{figure}
+                  \includegraphics[height=2cm]{\instituteLogo}
+              \end{figure}
+
+
+              aaa
+            \end{minipage}
+            \begin{minipage}[t]{0.38\textwidth}
+              \tableofcontents
+            \end{minipage}
+        \end{frame}
+    }
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Frame Title 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\setbeamerfont{frametitle}{series=\scshape}
-\setbeamercolor{frametitle}{fg=black}
 
 \setbeamertemplate{frametitle}{   
     \vspace*{-2mm}
@@ -125,17 +194,30 @@
         \inserttitle
     \end{center}
     \vspace*{-2mm}
-    % Logic to handle section vs frame titles
-    \ifdefempty{\insertsectionhead}{%
-        \ifdefempty{\insertframetitle}{}{%
-            \textbf{-- }\insertframetitle
-        }%
-    }{%
-        \ifdefempty{\insertframetitle}{}{%
-            \textbf{\large{\insertframetitle}\newline}
+    \begin{minipage}[t]{0.5\textwidth}
+      % Logic to handle section vs frame titles
+      \ifdefempty{\insertsectionhead}{%
+          \ifdefempty{\insertframetitle}{}{%
+              \textbf{-- }\insertframetitle
+          }%
+      }{%
+          \ifdefempty{\insertframetitle}{}{%
+            \textbf{\large{\insertframetitle}}
+
+            \vspace{-2mm}
             \textcolor{cardinalred}{\normalsize{\insertsectionhead}}
-        }%
-    }
+          }%
+      }
+    \end{minipage}
+    \begin{minipage}[t]{0.48\textwidth}
+      \vspace{-1.25cm}
+      \begin{figure}
+        \begin{flushright}
+          \includegraphics[height=1.2cm]{\instituteThumb}
+        \end{flushright}
+      \end{figure}
+    \end{minipage}
+
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -144,6 +226,14 @@
 
 \AtBeginSection[]{
   \begin{frame}
+    \begin{tikzpicture}[remember picture, overlay]
+      \coordinate (CircleCenter) at ([xshift=0, yshift=0cm]current page.center);
+      
+      % [fill=colorname!alpha]
+      \fill[fill=coolgrey!10] (CircleCenter) circle (8cm);
+      
+      \fill[fill=white] (CircleCenter) circle (6cm);
+    \end{tikzpicture}
   \vfill
   \centering
   \begin{beamercolorbox}[sep=8pt,center]{title}
