@@ -1,0 +1,144 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamertheme}[2025/12/12 Custom Beamer Theme]
+
+% 1. Load Required Packages
+% Your code uses \textls (microtype), \ifdefempty (etoolbox), and source sans pro font.
+\RequirePackage{microtype}
+\RequirePackage{etoolbox}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{sourcesanspro} 
+
+\mode<presentation>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Colors
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Primary Brand Colors
+\definecolor{cardinal}{RGB}{140,21,21} 
+\definecolor{coolgrey}{RGB}{77,79,83} 
+
+% Secondary/Palette Colors
+\definecolor{stanfordred}{RGB}{140,21,21}
+\definecolor{darkgreen}{RGB}{21,140,21}
+\definecolor{darkblue}{RGB}{21,21,140}
+\definecolor{sun}{RGB}{234,171,0}
+
+% Pastel Palette
+\definecolor{pastelMagenta}{HTML}{FF48CF}
+\definecolor{pastelPurple}{HTML}{8770FE}
+\definecolor{pastelBlue}{HTML}{1BA1EA}
+\definecolor{pastelSeaGreen}{HTML}{14B57F}
+\definecolor{pastelGreen}{HTML}{3EAA0D}
+\definecolor{pastelOrange}{HTML}{C38D09}
+\definecolor{pastelRed}{HTML}{F5615C}
+
+% Shade Definitions
+% Note: You defined shadecolor twice in your snippet. I kept the last one active.
+%\colorlet{shadecolor}{black!5} 
+\definecolor{shadecolor}{rgb}{1,0.8,0.3}
+
+% Helper Commands for text coloring
+\newcommand{\darkblue}[1]{{\color{darkblue} #1}}
+\newcommand{\darkgreen}[1]{{\color{darkgreen} #1}}
+\newcommand{\darkred}[1]{{\color{stanfordred} #1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer General Settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Itemize Bullet Colors
+\setbeamercolor{itemize item}{fg=black}
+\setbeamercolor{itemize subitem}{fg=black}
+\setbeamercolor{itemize subsubitem}{fg=black}
+\setbeamercolor{section head}{fg=cardinal}
+
+% Itemize Bullet Shapes
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}{{\textendash}}
+\setbeamertemplate{itemize subsubitem}[triangle]
+
+% Navigation Symbols (Adding page numbers)
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Frame Title Customization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamerfont{frametitle}{series=\scshape}
+\setbeamercolor{frametitle}{fg=black}
+
+\setbeamertemplate{frametitle}{   
+    \vspace*{-2mm}
+    \begin{center}
+        \footnotesize
+        \inserttitle
+    \end{center}
+    \vspace*{1mm}
+    % Logic to handle section vs frame titles
+    \ifdefempty{\insertsectionhead}{%
+        \ifdefempty{\insertframetitle}{}{%
+            \textbf{-- }\insertframetitle
+        }%
+    }{%
+        \textbf{--- }\insertsectionhead
+        \ifdefempty{\insertframetitle}{}{%
+            \text{: }\large{\insertframetitle}
+        }%
+    }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Section Divider Slides
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{title}
+    {\usebeamerfont{title}\usebeamercolor[fg]{frametitle}{\textsc{\insertsectionnumber\protect~\text{.}\insertsectionhead}}}\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title Page Customization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamertemplate{title page}[default][left] 
+
+% Font Settings
+\setbeamerfont{subtitle}{series=\scshape}
+\setbeamercolor{subtitle}{fg=black}
+\setbeamerfont{author}{family=\sourcesanspro}
+\setbeamercolor{author}{fg=black}
+\setbeamercolor{institute}{fg=cardinal}
+\setbeamercolor{email}{fg=coolgrey}
+
+% Email handling
+% Initialize @email to avoid errors if user doesn't define it
+\def\@email{} 
+\newcommand{\email}[1]{\def\@email{\texttt{\MakeLowercase{\textls[10]{#1}}}}}
+
+% Custom Title Page Template
+\defbeamertemplate*{title page}{customized}[1][]
+{
+    \usebeamerfont{title}\textls[100]{\MakeUppercase{\textbf{\inserttitle}}}\par
+    \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\textls[100]{\textsc{\insertsubtitle}}\par\par
+    \vfill
+    \usebeamerfont{author}\usebeamercolor[fg]{author}\textls[100]{\textsc{\insertauthor}}\par
+    \usebeamerfont{institute}{\usebeamercolor[fg]{institute}\textls[100]{\textsc{\insertinstitute}}}\par
+    \bigskip
+    {\usebeamercolor[fg]{email}\@email}\par
+    \usebeamerfont{date}\insertdate\par
+    \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+}
+
+\mode<all>
