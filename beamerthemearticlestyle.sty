@@ -1,8 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{beamertheme}[2025/12/12 Custom Beamer Theme]
 
-% 1. Load Required Packages
-% Your code uses \textls (microtype), \ifdefempty (etoolbox), and source sans pro font.
 \RequirePackage{microtype}
 \RequirePackage{etoolbox}
 \RequirePackage[T1]{fontenc}
@@ -15,33 +13,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Primary Brand Colors
-\definecolor{cardinal}{RGB}{140,21,21} 
+\definecolor{cardinalred}{RGB}{140,21,21} 
 \definecolor{coolgrey}{RGB}{77,79,83} 
-
-% Secondary/Palette Colors
-\definecolor{stanfordred}{RGB}{140,21,21}
-\definecolor{darkgreen}{RGB}{21,140,21}
-\definecolor{darkblue}{RGB}{21,21,140}
-\definecolor{sun}{RGB}{234,171,0}
-
-% Pastel Palette
-\definecolor{pastelMagenta}{HTML}{FF48CF}
-\definecolor{pastelPurple}{HTML}{8770FE}
-\definecolor{pastelBlue}{HTML}{1BA1EA}
-\definecolor{pastelSeaGreen}{HTML}{14B57F}
-\definecolor{pastelGreen}{HTML}{3EAA0D}
-\definecolor{pastelOrange}{HTML}{C38D09}
-\definecolor{pastelRed}{HTML}{F5615C}
-
-% Shade Definitions
-% Note: You defined shadecolor twice in your snippet. I kept the last one active.
-%\colorlet{shadecolor}{black!5} 
-\definecolor{shadecolor}{rgb}{1,0.8,0.3}
-
-% Helper Commands for text coloring
-\newcommand{\darkblue}[1]{{\color{darkblue} #1}}
-\newcommand{\darkgreen}[1]{{\color{darkgreen} #1}}
-\newcommand{\darkred}[1]{{\color{stanfordred} #1}}
+\definecolor{lightgrey}{HTML}{f8f8f8} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Beamer General Settings
@@ -51,7 +25,7 @@
 \setbeamercolor{itemize item}{fg=black}
 \setbeamercolor{itemize subitem}{fg=black}
 \setbeamercolor{itemize subsubitem}{fg=black}
-\setbeamercolor{section head}{fg=cardinal}
+\setbeamercolor{section head}{fg=cardinalred}
 
 % Itemize Bullet Shapes
 \setbeamertemplate{itemize item}[circle]
@@ -67,7 +41,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Frame Title Customization
+% Frame Title 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \setbeamerfont{frametitle}{series=\scshape}
@@ -79,16 +53,16 @@
         \footnotesize
         \inserttitle
     \end{center}
-    \vspace*{1mm}
+    \vspace*{-2mm}
     % Logic to handle section vs frame titles
     \ifdefempty{\insertsectionhead}{%
         \ifdefempty{\insertframetitle}{}{%
             \textbf{-- }\insertframetitle
         }%
     }{%
-        \textbf{--- }\insertsectionhead
         \ifdefempty{\insertframetitle}{}{%
-            \text{: }\large{\insertframetitle}
+            \textbf{\large{\insertframetitle}\newline}
+            \textcolor{cardinalred}{\normalsize{\insertsectionhead}}
         }%
     }
 }
@@ -109,7 +83,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Title Page Customization
+% Title Page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \setbeamertemplate{title page}[default][left] 
@@ -119,7 +93,7 @@
 \setbeamercolor{subtitle}{fg=black}
 \setbeamerfont{author}{family=\sourcesanspro}
 \setbeamercolor{author}{fg=black}
-\setbeamercolor{institute}{fg=cardinal}
+\setbeamercolor{institute}{fg=cardinalred}
 \setbeamercolor{email}{fg=coolgrey}
 
 % Email handling
@@ -130,15 +104,55 @@
 % Custom Title Page Template
 \defbeamertemplate*{title page}{customized}[1][]
 {
-    \usebeamerfont{title}\textls[100]{\MakeUppercase{\textbf{\inserttitle}}}\par
-    \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\textls[100]{\textsc{\insertsubtitle}}\par\par
+    \begin{tikzpicture}[remember picture, overlay]
+        \coordinate (CircleCenter) at ([xshift=0, yshift=0cm]current page.center);
+        
+        % [fill=colorname!alpha]
+        \fill[fill=coolgrey!10] (CircleCenter) circle (8cm);
+        
+        \fill[fill=white] (CircleCenter) circle (6cm);
+    \end{tikzpicture}
+
+    \center{
+      \usebeamerfont{title}\textls[100]{\MakeUppercase{\textbf{\inserttitle}}}\par
+      \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\textls[100]{\textsc{\insertsubtitle}}\par\par
+    }
     \vfill
-    \usebeamerfont{author}\usebeamercolor[fg]{author}\textls[100]{\textsc{\insertauthor}}\par
     \usebeamerfont{institute}{\usebeamercolor[fg]{institute}\textls[100]{\textsc{\insertinstitute}}}\par
+    \usebeamerfont{author}\usebeamercolor[fg]{author}\textls[100]{\textsc{\insertauthor}}\par
     \bigskip
     {\usebeamercolor[fg]{email}\@email}\par
     \usebeamerfont{date}\insertdate\par
     \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of contents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\def\@toctittle{Table of Contents}
+\newcommand{\toctittle}[1]{
+  \def\@toctittle{#1}
+}
+\newcommand{\inserttoctittle}{
+    \@toctittle
+}
+
+% style of section presented in the table of contents
+\setbeamertemplate{section in toc}{%
+  \tikz{\draw[fill=blue!20] (0,0) circle (3pt);}\hspace{2mm}\inserttocsection\par
+      {\usebeamerfont{subtitle}\usebeamercolor[fg]{frametitle}{\textsc{\inserttocsection\protect~\text{.}\insertsectionhead}}}\par%
+
+}
+\setbeamertemplate{subsection in toc}{%
+  \tikz{\draw[fill=blue!20] (0,0) circle (3pt);}\hspace{2mm}\inserttocsection\par
+}
+
+
+% avoid numbering of frames that are breaked into multiply slides
+\setbeamertemplate{frametitle continuation}{}
+
+
 \mode<all>
+
