@@ -41,48 +41,6 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Frame Title 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\setbeamerfont{frametitle}{series=\scshape}
-\setbeamercolor{frametitle}{fg=black}
-
-\setbeamertemplate{frametitle}{   
-    \vspace*{-2mm}
-    \begin{center}
-        \footnotesize
-        \inserttitle
-    \end{center}
-    \vspace*{-2mm}
-    % Logic to handle section vs frame titles
-    \ifdefempty{\insertsectionhead}{%
-        \ifdefempty{\insertframetitle}{}{%
-            \textbf{-- }\insertframetitle
-        }%
-    }{%
-        \ifdefempty{\insertframetitle}{}{%
-            \textbf{\large{\insertframetitle}\newline}
-            \textcolor{cardinalred}{\normalsize{\insertsectionhead}}
-        }%
-    }
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Section Divider Slides
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\AtBeginSection[]{
-  \begin{frame}
-  \vfill
-  \centering
-  \begin{beamercolorbox}[sep=8pt,center]{title}
-    {\usebeamerfont{title}\usebeamercolor[fg]{frametitle}{\textsc{\insertsectionnumber\protect~\text{.}\insertsectionhead}}}\par%
-  \end{beamercolorbox}
-  \vfill
-  \end{frame}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Title Page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -153,6 +111,47 @@
 % avoid numbering of frames that are breaked into multiply slides
 \setbeamertemplate{frametitle continuation}{}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Frame Title 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamerfont{frametitle}{series=\scshape}
+\setbeamercolor{frametitle}{fg=black}
+
+\setbeamertemplate{frametitle}{   
+    \vspace*{-2mm}
+    \begin{center}
+        \footnotesize
+        \inserttitle
+    \end{center}
+    \vspace*{-2mm}
+    % Logic to handle section vs frame titles
+    \ifdefempty{\insertsectionhead}{%
+        \ifdefempty{\insertframetitle}{}{%
+            \textbf{-- }\insertframetitle
+        }%
+    }{%
+        \ifdefempty{\insertframetitle}{}{%
+            \textbf{\large{\insertframetitle}\newline}
+            \textcolor{cardinalred}{\normalsize{\insertsectionhead}}
+        }%
+    }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Section Divider Slides
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{title}
+    {\usebeamerfont{title}\usebeamercolor[fg]{frametitle}{\textsc{\insertsectionnumber\protect~\text{.}\insertsectionhead}}}\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
 
 \mode<all>
 
