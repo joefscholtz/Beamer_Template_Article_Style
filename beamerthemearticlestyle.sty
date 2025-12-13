@@ -16,10 +16,15 @@
 % Colors
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Primary Brand Colors
 \definecolor{cardinalred}{RGB}{140,21,21} 
 \definecolor{coolgrey}{RGB}{77,79,83} 
 \definecolor{lightgrey}{HTML}{f8f8f8} 
+
+\colorlet{primarycolor}{white}
+\colorlet{invertedprimarycolor}{black}
+\colorlet{secondarycolor}{coolgrey}
+\colorlet{accentcolor}{cardinalred}
+\colorlet{secondaryaccentcolor}{white}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Beamer General Settings
@@ -29,7 +34,7 @@
 \setbeamercolor{itemize item}{fg=black}
 \setbeamercolor{itemize subitem}{fg=black}
 \setbeamercolor{itemize subsubitem}{fg=black}
-\setbeamercolor{section head}{fg=cardinalred}
+\setbeamercolor{section head}{fg=accentcolor}
 
 % Itemize Bullet Shapes
 \setbeamertemplate{itemize item}[circle]
@@ -37,19 +42,22 @@
 \setbeamertemplate{itemize subsubitem}[triangle]
 
 % Font Settings
+\setbeamercolor{title}{fg=invertedprimarycolor}
+
 \setbeamerfont{subtitle}{series=\scshape}
-\setbeamercolor{subtitle}{fg=black}
+\setbeamercolor{subtitle}{fg=invertedprimarycolor}
+
 \setbeamerfont{author}{family=\sourcesanspro}
-\setbeamercolor{author}{fg=black}
+\setbeamercolor{author}{fg=invertedprimarycolor}
 
 \setbeamerfont{institute}{family=\sourcesanspro}
-\setbeamercolor{institute}{fg=cardinalred}
+\setbeamercolor{institute}{fg=accentcolor}
 
 \setbeamerfont{email}{family=\sourcesanspro}
-\setbeamercolor{email}{fg=coolgrey}
+\setbeamercolor{email}{fg=secondarycolor}
 
 \setbeamerfont{date}{family=\sourcesanspro}
-\setbeamercolor{date}{fg=white}
+\setbeamercolor{date}{fg=secondaryaccentcolor}
 
 \setbeamerfont{frametitle}{series=\scshape}
 \setbeamercolor{frametitle}{fg=black}
@@ -71,6 +79,7 @@
 % Title Page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \newtoggle{showInstituteLogo}
 \togglefalse{showInstituteLogo} 
 
@@ -91,13 +100,17 @@
 % Custom Title Page Template
 \defbeamertemplate*{title page}{customized}[1][]
 {
+      \setbeamercolor{background canvas}{bg=primarycolor}
+
     \begin{tikzpicture}[remember picture, overlay]
         \coordinate (CircleCenter) at ([xshift=0, yshift=0cm]current page.center);
         
+        \fill[fill=primarycolor] (CircleCenter) circle (10cm);
+
         % [fill=colorname!alpha]
-        \fill[fill=coolgrey!10] (CircleCenter) circle (8cm);
+        \fill[fill=secondarycolor!10] (CircleCenter) circle (8cm);
         
-        \fill[fill=white] (CircleCenter) circle (6cm);
+        \fill[fill=primarycolor] (CircleCenter) circle (6cm);
     \end{tikzpicture}
     
     \vspace{-1.2cm}
@@ -113,7 +126,7 @@
         \usebeamerfont{institute}{\usebeamercolor[fg]{institute}\textls[100]{\textsc{\insertinstitute}}}\par
       }
       \bigskip
-      \usebeamerfont{title}\textls[100]{\MakeUppercase{\textbf{\inserttitle}}}\par
+      \usebeamerfont{title}\usebeamercolor[fg]{title}\textls[100]{\MakeUppercase{\textbf{\inserttitle}}}\par
       \usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\textls[100]{\textsc{\insertsubtitle}}\par\par
     }
     \vfill
@@ -124,7 +137,7 @@
     \begin{figure}
       \centering
       \begin{tikzpicture}
-        \node[fill=cardinalred, rounded rectangle, minimum width=1.1cm, minimum height=0.6cm] at (0, 0) {\footnotesize{\textbf{\usebeamercolor[fg]{date}{\usebeamerfont{date}{\insertdate}}}}};
+        \node[fill=accentcolor, rounded rectangle, minimum width=1.1cm, minimum height=0.6cm] at (0, 0) {\footnotesize{\textbf{\usebeamercolor[fg]{date}{\usebeamerfont{date}{\insertdate}}}}};
       \end{tikzpicture}
     \end{figure}
     \vspace{-1cm}
@@ -145,7 +158,7 @@
 
 % style of section presented in the table of contents
 \setbeamertemplate{section in toc}{%
-  \tikz{\draw[fill=black] (0,0) circle (3pt);}
+  \tikz{\draw[fill=invertedprimarycolor] (0,0) circle (3pt);}
   \hspace{1mm}{\usebeamerfont{subtitle}\usebeamercolor[fg]{frametitle}{\textsc{\textbf{\inserttocsectionnumber ) \inserttocsection}}}}\par%
 }
 \setbeamertemplate{subsection in toc}{%
@@ -158,31 +171,37 @@
 \setbeamertemplate{frametitle continuation}{}
 
 \newcommand{\InsertTocFrame}{
-  \begin{frame}
+  {
+    \setbeamercolor{background canvas}{bg=primarycolor}
+    \setbeamercolor{title}{fg=invertedprimarycolor}
+    \setbeamercolor{normal text}{fg=invertedprimarycolor}
+    \setbeamercolor{frametitle}{fg=invertedprimarycolor}
+
+    \begin{frame}
       \begin{tikzpicture}[remember picture, overlay]
         \coordinate (CircleCenter) at ([xshift=-7.5cm, yshift=0cm]current page.center);
-        
-        % Outer Grey Circle
-        \fill[fill=coolgrey!10] (CircleCenter) circle (8cm);
-        
-        % Inner White Circle
-        \fill[fill=white] (CircleCenter) circle (6cm);
-    \end{tikzpicture}
 
-    \begin{minipage}[c]{0.6\textwidth}
-      \begin{minipage}[c]{0.45\textwidth}
-        \centering
-        \fontsize{35}{35}{\textcolor{cardinalred}{\faIcon{clipboard-list}}}
+        \fill[fill=secondarycolor!10] (CircleCenter) circle (8cm);
 
-        \vspace{5mm}
-        \usebeamerfont{title}\textls[100]{\MakeUppercase{\textbf{\inserttoctittle}}}\par
-        % \usebeamerfont{title}\textls[100]{\textbf{\inserttoctittle}}\par
+        \fill[fill=primarycolor] (CircleCenter) circle (6cm);
+      \end{tikzpicture}
+
+      \begin{minipage}[c]{0.6\textwidth}
+        \begin{minipage}[c]{0.45\textwidth}
+          \centering
+          \fontsize{35}{35}{\textcolor{accentcolor}{\faIcon{clipboard-list}}}
+
+          \vspace{5mm}
+          \usebeamercolor[fg]{title}{\usebeamerfont{title}\textls[100]{\MakeUppercase{\textbf{\inserttoctittle}}}\par}
+          % \usebeamerfont{title}\textls[100]{\textbf{\inserttoctittle}}\par
+        \end{minipage}
       \end{minipage}
-    \end{minipage}
-    \begin{minipage}[c]{0.38\textwidth}
-      \tableofcontents
-    \end{minipage}
-  \end{frame}
+      \begin{minipage}[c]{0.38\textwidth}
+        \tableofcontents
+      \end{minipage}
+    \end{frame}
+  }
+
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -231,22 +250,27 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \AtBeginSection[]{
-  \begin{frame}
-    \begin{tikzpicture}[remember picture, overlay]
-      \coordinate (CircleCenter) at ([xshift=0, yshift=0cm]current page.center);
-      
-      % [fill=colorname!alpha]
-      \fill[fill=coolgrey!10] (CircleCenter) circle (8cm);
-      
-      \fill[fill=white] (CircleCenter) circle (6cm);
-    \end{tikzpicture}
-  \vfill
-  \centering
-  \begin{beamercolorbox}[sep=8pt,center]{title}
-    {\usebeamerfont{title}\usebeamercolor[fg]{frametitle}{\textsc{\insertsectionnumber\protect~\text{.}\insertsectionhead}}}\par%
-  \end{beamercolorbox}
-  \vfill
-  \end{frame}
+    {
+    \setbeamercolor{background canvas}{bg=primarycolor}
+    \setbeamercolor{title}{fg=invertedprimarycolor}
+
+    \begin{frame}
+      \begin{tikzpicture}[remember picture, overlay]
+        \coordinate (CircleCenter) at ([xshift=0, yshift=0cm]current page.center);
+        
+        % [fill=colorname!alpha]
+        \fill[fill=secondarycolor!10] (CircleCenter) circle (8cm);
+        
+        \fill[fill=primarycolor] (CircleCenter) circle (6cm);
+      \end{tikzpicture}
+      \vfill
+      \centering
+      \begin{beamercolorbox}[sep=8pt,center]{title}
+        {\usebeamerfont{title}\usebeamercolor[fg]{title}{\textsc{\insertsectionnumber\protect~\text{.}\insertsectionhead}}}\par%
+      \end{beamercolorbox}
+      \vfill
+    \end{frame}
+  }
 }
 
 \mode<all>
